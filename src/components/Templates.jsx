@@ -4,6 +4,7 @@ import { Card, SectionHeader, Btn, Input, Select } from './ui/Card';
 import { Modal, ConfirmModal } from './ui/Modal';
 import { showToast } from './ui/Toast';
 import { TEMPLATES_INICIAIS } from '../data/templates';
+import { AIGenerator } from './AIGenerator';
 
 const PILARES = ['Gestão', 'Técnica', 'Pessoal', 'Levena', 'ECDL'];
 
@@ -18,7 +19,7 @@ function buildCopy(template, values) {
   return result.trim();
 }
 
-export function Templates({ drafts, setDrafts }) {
+export function Templates({ drafts, setDrafts, apiKey }) {
   const [activeTemplate, setActiveTemplate] = useState(0);
   const [values, setValues] = useState({});
   const [draftTitle, setDraftTitle] = useState('');
@@ -32,14 +33,14 @@ export function Templates({ drafts, setDrafts }) {
   const setVal = (k, v) => setValues(prev => ({ ...prev, [k]: v }));
 
   const copyToClipboard = () => {
-    const copy = buildCopy(template, values);
-    if (!copy) { showToast('Preencha ao menos um campo', 'error'); return; }
+    const copy = values.ai_generated || buildCopy(template, values);
+    if (!copy) { showToast('Preencha ao menos um campo ou gere com IA', 'error'); return; }
     navigator.clipboard.writeText(copy).then(() => showToast('Copy copiada para o clipboard'));
   };
 
   const saveDraft = () => {
-    const copy = buildCopy(template, values);
-    if (!copy) { showToast('Preencha ao menos um campo', 'error'); return; }
+    const copy = values.ai_generated || buildCopy(template, values);
+    if (!copy) { showToast('Preencha ao menos um campo ou gere com IA', 'error'); return; }
     if (!draftTitle) { showToast('Digite um título para o rascunho', 'error'); return; }
     const draft = {
       id: Date.now(),
@@ -63,9 +64,25 @@ export function Templates({ drafts, setDrafts }) {
     navigator.clipboard.writeText(text).then(() => showToast('Copy copiada'));
   };
 
+  // When AI applies copy, populate the free-text preview directly
+  const handleAIApply = (copy) => {
+    // Put the full copy into a synthetic "ai_copy" field shown in the preview
+    setValues({ ai_generated: copy });
+    showToast('Copy aplicada — aparece no preview à direita');
+  };
+
   return (
     <div style={{ padding: '32px' }} className="animate-fade-in">
       <SectionHeader title="Templates de Copy" subtitle="5 templates pré-carregados" />
+
+      {/* AI Generator — always visible at top */}
+      <div style={{ marginBottom: '24px' }}>
+        <AIGenerator
+          apiKey={apiKey}
+          defaultPilar={TEMPLATES_INICIAIS[activeTemplate]?.pilar || 'Gestão'}
+          onApply={handleAIApply}
+        />
+      </div>
 
       {/* Template tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', flexWrap: 'wrap' }}>
@@ -114,14 +131,22 @@ export function Templates({ drafts, setDrafts }) {
 
         {/* Preview */}
         <Card style={{ padding: '20px' }}>
-          <h3 style={{ fontFamily: 'Georgia,serif', color: '#B8860B', margin: '0 0 16px', fontSize: '15px' }}>Preview</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ fontFamily: 'Georgia,serif', color: '#B8860B', margin: 0, fontSize: '15px' }}>Preview</h3>
+            {values.ai_generated && (
+              <span style={{ fontSize: '11px', background: '#E8F5E9', color: '#2E7D32', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>
+                Gerada por IA
+              </span>
+            )}
+          </div>
           <div style={{
             background: '#F5EDE0', borderRadius: '8px', padding: '16px',
             minHeight: '200px', fontSize: '13px', lineHeight: 1.7, color: '#333',
             whiteSpace: 'pre-wrap', fontFamily: 'inherit',
+            borderLeft: values.ai_generated ? '3px solid #2E7D32' : 'none',
           }}>
-            {buildCopy(template, values) || (
-              <span style={{ color: '#999', fontStyle: 'italic' }}>Preencha os campos ao lado para ver o preview da copy...</span>
+            {values.ai_generated || buildCopy(template, values) || (
+              <span style={{ color: '#999', fontStyle: 'italic' }}>Preencha os campos ao lado ou use "Gerar copy com IA" acima...</span>
             )}
           </div>
           {template.sufixo && (

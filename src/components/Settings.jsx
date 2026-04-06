@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { Download, Upload, Trash2, Info } from 'lucide-react';
+import { Download, Upload, Trash2, Info, Sparkles, Eye, EyeOff } from 'lucide-react';
 import { Card, SectionHeader, Btn } from './ui/Card';
 import { ConfirmModal } from './ui/Modal';
 import { showToast } from './ui/Toast';
 
-export function Settings({ posts, pautas, calendarData, storiesData, drafts, checklists, kanban, triggers, onImport, onReset }) {
+export function Settings({ posts, pautas, calendarData, storiesData, drafts, checklists, kanban, triggers, onImport, onReset, apiKey, setApiKey }) {
   const [showReset, setShowReset] = useState(false);
   const [showReset2, setShowReset2] = useState(false);
+  const [keyInput, setKeyInput] = useState(apiKey || '');
+  const [showKey, setShowKey] = useState(false);
 
   const exportData = () => {
     const data = {
@@ -59,9 +61,50 @@ export function Settings({ posts, pautas, calendarData, storiesData, drafts, che
 
   const counts = countItems();
 
+  const saveKey = () => {
+    setApiKey(keyInput.trim());
+    showToast(keyInput.trim() ? 'Chave de API salva' : 'Chave removida', keyInput.trim() ? 'success' : 'info');
+  };
+
   return (
     <div style={{ padding: '32px' }} className="animate-fade-in">
       <SectionHeader title="Configurações" subtitle="Gerenciar dados, exportar e importar" />
+
+      {/* API Key Card — destaque no topo */}
+      <Card style={{ padding: '24px', marginBottom: '20px', border: '2px solid #B8860B' }}>
+        <h3 style={{ fontFamily: 'Georgia,serif', color: '#B8860B', margin: '0 0 8px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Sparkles size={18} /> IA — Chave de API Anthropic
+        </h3>
+        <p style={{ fontSize: '13px', color: '#666', lineHeight: 1.6, margin: '0 0 16px' }}>
+          Necessária para gerar copies com Claude diretamente do dashboard. Obtenha em <strong>console.anthropic.com/keys</strong>. A chave fica salva só no seu navegador.
+        </p>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, color: '#555', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>
+              Chave API
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showKey ? 'text' : 'password'}
+                value={keyInput}
+                onChange={e => setKeyInput(e.target.value)}
+                placeholder="sk-ant-api03-..."
+                onKeyDown={e => e.key === 'Enter' && saveKey()}
+                style={{ width: '100%', padding: '9px 40px 9px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '13px', fontFamily: 'monospace', background: '#fff', boxSizing: 'border-box' }}
+              />
+              <button onClick={() => setShowKey(s => !s)} style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}>
+                {showKey ? <EyeOff size={15} /> : <Eye size={15} />}
+              </button>
+            </div>
+          </div>
+          <Btn onClick={saveKey}>Salvar chave</Btn>
+        </div>
+        {apiKey && (
+          <p style={{ fontSize: '12px', color: '#2E7D32', margin: '8px 0 0', fontWeight: 600 }}>
+            Chave configurada — geração de copy ativa
+          </p>
+        )}
+      </Card>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
         {/* Export */}

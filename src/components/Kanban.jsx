@@ -4,6 +4,7 @@ import { Card, SectionHeader, Btn, Input, Select } from './ui/Card';
 import { Badge } from './ui/Badge';
 import { Modal } from './ui/Modal';
 import { showToast } from './ui/Toast';
+import { AIGenerator } from './AIGenerator';
 
 const COLUNAS = [
   { id: 'pauta', label: 'PAUTA', color: '#F5EDE0', border: '#E0D0B0' },
@@ -67,7 +68,7 @@ function KanbanCardComp({ card, colId, onEdit, onDelete, onDragStart, onDragEnd 
   );
 }
 
-function CardForm({ initial, colId, onSave, onCancel }) {
+function CardForm({ initial, colId, onSave, onCancel, apiKey }) {
   const [form, setForm] = useState(initial || emptyCard);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -78,7 +79,16 @@ function CardForm({ initial, colId, onSave, onCancel }) {
         <Select label="Pilar" value={form.pilar} onChange={e => set('pilar', e.target.value)} options={PILARES} />
         <Select label="Marca" value={form.marca} onChange={e => set('marca', e.target.value)} options={MARCAS} />
       </div>
-      <Input label="Copy" type="textarea" value={form.copy} onChange={e => set('copy', e.target.value)} placeholder="Copy do post..." rows={4} />
+
+      {/* AI Generator integrado no card */}
+      <AIGenerator
+        apiKey={apiKey}
+        defaultPilar={form.pilar}
+        defaultMarca={form.marca}
+        onApply={(copy) => set('copy', copy)}
+      />
+
+      <Input label="Copy" type="textarea" value={form.copy} onChange={e => set('copy', e.target.value)} placeholder="Escreva ou gere com IA acima..." rows={4} />
       <Input label="Data prevista" type="date" value={form.dataPrevista} onChange={e => set('dataPrevista', e.target.value)} />
       <Input label="Link bruto (Drive)" value={form.linkBruto} onChange={e => set('linkBruto', e.target.value)} placeholder="https://drive.google.com/..." />
       <Input label="Link editado" value={form.linkEditado} onChange={e => set('linkEditado', e.target.value)} placeholder="https://..." />
@@ -91,7 +101,7 @@ function CardForm({ initial, colId, onSave, onCancel }) {
   );
 }
 
-export function Kanban({ kanban, setKanban }) {
+export function Kanban({ kanban, setKanban, apiKey }) {
   const [editCard, setEditCard] = useState(null);
   const [editColId, setEditColId] = useState(null);
   const [addColId, setAddColId] = useState(null);
@@ -248,6 +258,7 @@ export function Kanban({ kanban, setKanban }) {
           colId={editColId || addColId}
           onSave={(form) => handleSaveCard(form, editColId || addColId)}
           onCancel={() => { setEditCard(null); setEditColId(null); setAddColId(null); }}
+          apiKey={apiKey}
         />
       </Modal>
     </div>

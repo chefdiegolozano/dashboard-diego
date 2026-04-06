@@ -27,6 +27,7 @@ export default function App() {
   const [checklists, setChecklists] = useLocalStorage('dl_checklists', []);
   const [kanban, setKanban] = useLocalStorage('dl_kanban', {});
   const [triggers, setTriggers] = useLocalStorage('dl_manychat', MANYCHAT_TRIGGERS_INICIAIS);
+  const [apiKey, setApiKey] = useLocalStorage('dl_anthropic_key', '');
 
   const handleImport = (data) => {
     if (data.posts) setPosts(data.posts);
@@ -55,9 +56,9 @@ export default function App() {
     calendario: <Calendar calendarData={calendarData} setCalendarData={setCalendarData} storiesData={storiesData} setStoriesData={setStoriesData} />,
     metricas: <Metrics posts={posts} setPosts={setPosts} />,
     pautas: <Pautas pautas={pautas} setPautas={setPautas} />,
-    templates: <Templates drafts={drafts} setDrafts={setDrafts} />,
+    templates: <Templates drafts={drafts} setDrafts={setDrafts} apiKey={apiKey} />,
     checklist: <Checklist checklists={checklists} setChecklists={setChecklists} />,
-    kanban: <Kanban kanban={kanban} setKanban={setKanban} />,
+    kanban: <Kanban kanban={kanban} setKanban={setKanban} apiKey={apiKey} />,
     workflow: <Workflow />,
     automacao: <Automation triggers={triggers} setTriggers={setTriggers} />,
     regras: <RulesPlaybook />,
@@ -66,6 +67,7 @@ export default function App() {
       storiesData={storiesData} drafts={drafts} checklists={checklists}
       kanban={kanban} triggers={triggers}
       onImport={handleImport} onReset={handleReset}
+      apiKey={apiKey} setApiKey={setApiKey}
     />,
   };
 

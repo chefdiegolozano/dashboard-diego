@@ -153,7 +153,7 @@ export function Metrics({ posts, setPosts }) {
           options={[{ value: '', label: 'Todas' }, ...MARCAS.map(m => ({ value: m, label: m }))]}
           style={{ width: '160px' }} />
         <Select label="Classificação" value={filterClassif} onChange={e => setFilterClassif(e.target.value)}
-          options={[{ value: '', label: 'Todas' }, 'EXCELENTE', 'BOM', 'REGULAR', 'FRACO'].map(c => ({ value: c, label: c || 'Todas' }))}
+          options={[{ value: '', label: 'Todas' }, { value: 'EXCELENTE', label: 'EXCELENTE' }, { value: 'BOM', label: 'BOM' }, { value: 'REGULAR', label: 'REGULAR' }, { value: 'FRACO', label: 'FRACO' }]}
           style={{ width: '140px' }} />
         {(filterPilar || filterMarca || filterClassif) && (
           <Btn variant="ghost" size="sm" onClick={() => { setFilterPilar(''); setFilterMarca(''); setFilterClassif(''); }}>
