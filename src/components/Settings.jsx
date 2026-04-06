@@ -4,7 +4,7 @@ import { Card, SectionHeader, Btn } from './ui/Card';
 import { ConfirmModal } from './ui/Modal';
 import { showToast } from './ui/Toast';
 
-const SEC_API = import.meta.env.VITE_SEC_API_URL || 'http://localhost:3457';
+const SEC_API = import.meta.env.VITE_SEC_API_URL || 'https://secretaria.diegolozano.com.br';
 
 export function Settings({ posts, pautas, calendarData, storiesData, drafts, checklists, kanban, triggers, onImport, onReset, apiKey, setApiKey, setPosts }) {
   const [showReset, setShowReset] = useState(false);
