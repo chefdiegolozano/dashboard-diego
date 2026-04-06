@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
+import { Login } from './components/Login';
 import { Dashboard } from './components/Dashboard';
 import { Calendar } from './components/Calendar';
 import { Metrics } from './components/Metrics';
@@ -18,6 +19,18 @@ import { MANYCHAT_TRIGGERS_INICIAIS } from './data/manychatTriggers';
 
 export default function App() {
   const [active, setActive] = useState('dashboard');
+  const [authenticated, setAuthenticated] = useState(
+    () => sessionStorage.getItem('dl_session') === 'authenticated'
+  );
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('dl_session');
+    setAuthenticated(false);
+  };
+
+  if (!authenticated) {
+    return <Login onLogin={() => setAuthenticated(true)} />;
+  }
 
   const [posts, setPosts] = useLocalStorage('dl_posts', []);
   const [pautas, setPautas] = useLocalStorage('dl_pautas', PAUTAS_INICIAIS);
@@ -73,7 +86,7 @@ export default function App() {
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: '#F5EDE0' }}>
-      <Sidebar active={active} onNavigate={setActive} />
+      <Sidebar active={active} onNavigate={setActive} onLogout={handleLogout} />
       <main style={{ flex: 1, overflowY: 'auto', minHeight: '100vh', background: '#F5EDE0' }}>
         {pages[active] || <div style={{ padding: '32px', color: '#999' }}>Seção não encontrada</div>}
       </main>

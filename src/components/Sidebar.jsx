@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
   LayoutDashboard, Calendar, BarChart3, Lightbulb, FileText,
   CheckSquare, Columns3, GitBranch, Zap, BookOpen, Settings,
-  Menu, X, ChevronRight,
+  Menu, X, ChevronRight, LogOut,
 } from 'lucide-react';
 
 const MENU_ITEMS = [
@@ -19,7 +19,7 @@ const MENU_ITEMS = [
   { id: 'config', label: 'Config', icon: Settings, group: 'referencia' },
 ];
 
-export function Sidebar({ active, onNavigate }) {
+export function Sidebar({ active, onNavigate, onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -62,8 +62,24 @@ export function Sidebar({ active, onNavigate }) {
       </nav>
 
       {/* Footer */}
-      <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(184,134,11,0.2)', fontSize: '11px', color: 'rgba(184,134,11,0.4)' }}>
-        v1.0 — Sistema de Conteúdo
+      <div style={{ borderTop: '1px solid rgba(184,134,11,0.2)' }}>
+        <button
+          onClick={onLogout}
+          style={{
+            width: '100%', padding: '12px 20px', border: 'none', cursor: 'pointer',
+            background: 'transparent', color: 'rgba(245,237,224,0.4)',
+            display: 'flex', alignItems: 'center', gap: '10px',
+            fontSize: '13px', fontWeight: 400, transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(198,40,40,0.12)'; e.currentTarget.style.color = '#EF9A9A'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(245,237,224,0.4)'; }}
+        >
+          <LogOut size={15} />
+          Sair
+        </button>
+        <div style={{ padding: '8px 20px 14px', fontSize: '11px', color: 'rgba(184,134,11,0.3)' }}>
+          v1.0 — Sistema de Conteúdo
+        </div>
       </div>
     </div>
   );
