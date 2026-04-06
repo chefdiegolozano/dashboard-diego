@@ -53,16 +53,22 @@ export function Dashboard({ posts }) {
 
   const totalPosts = postsMes.length;
   const mediaViews = postsMes.length > 0
-    ? Math.round(postsMes.reduce((a, p) => a + (parseFloat(p.viewsIG) || 0), 0) / postsMes.length)
+    ? Math.round(postsMes.reduce((a, p) => a + (parseFloat(p.reach) || parseFloat(p.viewsIG) || 0), 0) / postsMes.length)
     : 0;
   const mediaEng = postsMes.length > 0
     ? (postsMes.reduce((a, p) => a + calcEngajamento(p), 0) / postsMes.length).toFixed(2)
     : 0;
-  const totalProfileVisits = postsMes.reduce((a, p) => a + (parseInt(p.profileVisits) || 0), 0);
+  const totalSaves = postsMes.reduce((a, p) => a + (parseInt(p.saves) || 0), 0);
+
+  // Avg watch time for Reels (in seconds)
+  const reelsMes = postsMes.filter(p => p.mediaProductType === 'REELS' && p.avgWatchTimeMs > 0);
+  const avgWatchSec = reelsMes.length > 0
+    ? (reelsMes.reduce((a, p) => a + (p.avgWatchTimeMs || 0), 0) / reelsMes.length / 1000).toFixed(1)
+    : null;
 
   // Top 3 posts
   const top3 = [...postsMes]
-    .sort((a, b) => (parseFloat(b.viewsIG) || 0) - (parseFloat(a.viewsIG) || 0))
+    .sort((a, b) => (parseFloat(b.reach) || parseFloat(b.viewsIG) || 0) - (parseFloat(a.reach) || parseFloat(a.viewsIG) || 0))
     .slice(0, 3);
 
   // Distribuição por pilar
@@ -90,15 +96,15 @@ export function Dashboard({ posts }) {
       {/* Stats cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
         <StatCard label="Posts no mês" value={totalPosts || '—'} icon={BarChart3} sub="publicados" />
-        <StatCard label="Média views IG" value={totalPosts ? formatarViews(mediaViews) : '—'} icon={Eye} sub="por post" color="#1565C0" />
-        <StatCard label="Média engajamento" value={totalPosts ? `${mediaEng}%` : '—'} icon={TrendingUp} sub="likes+coment+shares+saves/views" color="#2E7D32" />
-        <StatCard label="Profile visits" value={totalPosts ? formatarViews(totalProfileVisits) : '—'} icon={Users} sub="total no mês" color="#6A1B9A" />
+        <StatCard label="Média alcance" value={totalPosts ? formatarViews(mediaViews) : '—'} icon={Eye} sub="por post (reach real)" color="#1565C0" />
+        <StatCard label="Média engajamento" value={totalPosts ? `${mediaEng}%` : '—'} icon={TrendingUp} sub="total_interactions / reach" color="#2E7D32" />
+        <StatCard label={avgWatchSec ? 'Watch time médio' : 'Total saves'} value={avgWatchSec ? `${avgWatchSec}s` : (totalPosts ? formatarViews(totalSaves) : '—')} icon={Users} sub={avgWatchSec ? 'média Reels (retenção)' : 'salvamentos no mês'} color="#6A1B9A" />
       </div>
 
       {/* Charts row */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
         <Card style={{ padding: '20px' }}>
-          <h3 style={{ fontFamily: 'Georgia,serif', color: '#B8860B', margin: '0 0 16px', fontSize: '15px' }}>Views IG — últimas 8 semanas</h3>
+          <h3 style={{ fontFamily: 'Georgia,serif', color: '#B8860B', margin: '0 0 16px', fontSize: '15px' }}>Alcance (reach) — últimas 8 semanas</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={semanas}>
               <CartesianGrid strokeDasharray="3 3" stroke="#F0E4D0" />
@@ -158,7 +164,7 @@ export function Dashboard({ posts }) {
                     </div>
                     <p style={{ margin: '4px 0', fontSize: '12px', color: '#333', fontWeight: 600, lineHeight: 1.3 }}>{p.titulo}</p>
                     <div style={{ display: 'flex', gap: '12px', fontSize: '11px', color: '#666', marginTop: '4px' }}>
-                      <span>{formatarViews(p.viewsIG)} views</span>
+                      <span>{formatarViews(p.reach || p.viewsIG)} reach</span>
                       <span>{eng.toFixed(1)}% eng</span>
                     </div>
                   </div>

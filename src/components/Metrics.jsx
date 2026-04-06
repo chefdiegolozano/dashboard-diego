@@ -114,12 +114,12 @@ export function Metrics({ posts, setPosts }) {
     .filter(p => {
       if (!filterClassif) return true;
       const eng = calcEngajamento(p);
-      return classificarPost(eng, p.viewsIG) === filterClassif;
+      return classificarPost(eng, p.reach || p.viewsIG) === filterClassif;
     })
     .sort((a, b) => {
       let va, vb;
       if (sortField === 'data') { va = new Date(a.data); vb = new Date(b.data); }
-      else if (sortField === 'viewsIG') { va = parseFloat(a.viewsIG) || 0; vb = parseFloat(b.viewsIG) || 0; }
+      else if (sortField === 'viewsIG') { va = parseFloat(a.reach) || parseFloat(a.viewsIG) || 0; vb = parseFloat(b.reach) || parseFloat(b.viewsIG) || 0; }
       else if (sortField === 'eng') { va = calcEngajamento(a); vb = calcEngajamento(b); }
       else return 0;
       return sortDir === 'asc' ? va - vb : vb - va;
@@ -172,7 +172,7 @@ export function Metrics({ posts, setPosts }) {
                 <th style={{ padding: '10px 14px', textAlign: 'left', color: '#B8860B', fontWeight: 600, whiteSpace: 'nowrap' }}><SortBtn field="data" label="Data" /></th>
                 <th style={{ padding: '10px 14px', textAlign: 'left', color: '#B8860B', fontWeight: 600 }}>Título</th>
                 <th style={{ padding: '10px 14px', textAlign: 'left', color: '#B8860B', fontWeight: 600 }}>Pilar</th>
-                <th style={{ padding: '10px 14px', textAlign: 'right', color: '#B8860B', fontWeight: 600, whiteSpace: 'nowrap' }}><SortBtn field="viewsIG" label="Views IG" /></th>
+                <th style={{ padding: '10px 14px', textAlign: 'right', color: '#B8860B', fontWeight: 600, whiteSpace: 'nowrap' }}><SortBtn field="viewsIG" label="Reach" /></th>
                 <th style={{ padding: '10px 14px', textAlign: 'right', color: '#B8860B', fontWeight: 600, whiteSpace: 'nowrap' }}><SortBtn field="eng" label="Eng %" /></th>
                 <th style={{ padding: '10px 14px', textAlign: 'center', color: '#B8860B', fontWeight: 600 }}>Classif.</th>
                 <th style={{ padding: '10px 14px', textAlign: 'center', color: '#B8860B', fontWeight: 600 }}>Ações</th>
@@ -187,15 +187,21 @@ export function Metrics({ posts, setPosts }) {
                 </tr>
               ) : filtered.map((p, i) => {
                 const eng = calcEngajamento(p);
-                const classif = classificarPost(eng, p.viewsIG);
+                const reach = parseFloat(p.reach) || parseFloat(p.viewsIG) || 0;
+                const classif = classificarPost(eng, reach);
                 return (
                   <tr key={p.id} className="zebra-row" style={{ borderBottom: '1px solid #F0E4D0' }}>
                     <td style={{ padding: '10px 14px', color: '#666', whiteSpace: 'nowrap' }}>{p.data}</td>
-                    <td style={{ padding: '10px 14px', fontWeight: 500, maxWidth: '240px' }}>
-                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={p.titulo}>{p.titulo}</div>
+                    <td style={{ padding: '10px 14px', fontWeight: 500, maxWidth: '220px' }}>
+                      <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={p.titulo}>
+                        {p.permalink ? <a href={p.permalink} target="_blank" rel="noreferrer" style={{ color: '#1A1209', textDecoration: 'none' }}>{p.titulo}</a> : p.titulo}
+                      </div>
                     </td>
                     <td style={{ padding: '10px 14px' }}><Badge tipo="pilar" valor={p.pilar} /></td>
-                    <td style={{ padding: '10px 14px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>{formatarViews(p.viewsIG)}</td>
+                    <td style={{ padding: '10px 14px', textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>
+                      {formatarViews(reach)}
+                      {p.avgWatchTimeMs > 0 && <div style={{ fontSize: '10px', color: '#999', fontWeight: 400 }}>{(p.avgWatchTimeMs/1000).toFixed(1)}s watch</div>}
+                    </td>
                     <td style={{ padding: '10px 14px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{eng.toFixed(2)}%</td>
                     <td style={{ padding: '10px 14px', textAlign: 'center' }}><Badge tipo="classificacao" valor={classif} /></td>
                     <td style={{ padding: '10px 14px', textAlign: 'center' }}>

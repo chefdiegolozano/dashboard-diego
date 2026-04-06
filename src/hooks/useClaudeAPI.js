@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import Anthropic from '@anthropic-ai/sdk';
-import { SYSTEM_PROMPT } from '../data/aiPrompt';
+import { SYSTEM_PROMPT, buildEnrichedSystemPrompt } from '../data/aiPrompt';
 
-export function useClaudeAPI(apiKey) {
+export function useClaudeAPI(apiKey, posts) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [streamText, setStreamText] = useState('');
@@ -23,12 +23,15 @@ export function useClaudeAPI(apiKey) {
     const newMessages = [{ role: 'user', content: userPrompt }];
     setMessages(newMessages);
 
+    // Use enriched system prompt with real performance data when available
+    const systemPrompt = buildEnrichedSystemPrompt(posts);
+
     try {
       let fullText = '';
       const stream = await client.messages.stream({
         model: 'claude-opus-4-6',
         max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        system: systemPrompt,
         messages: newMessages,
       });
 
@@ -61,12 +64,14 @@ export function useClaudeAPI(apiKey) {
     const newMessages = [...messages, { role: 'user', content: correctionPrompt }];
     setMessages(newMessages);
 
+    const systemPrompt = buildEnrichedSystemPrompt(posts);
+
     try {
       let fullText = '';
       const stream = await client.messages.stream({
         model: 'claude-opus-4-6',
         max_tokens: 1024,
-        system: SYSTEM_PROMPT,
+        system: systemPrompt,
         messages: newMessages,
       });
 

@@ -18,7 +18,7 @@ const SUGESTOES = {
   ECDL: 'Ex: "turma do Master Confeiteiro em março — aluno que chegou fazendo croissant de borracha e saiu com laminação perfeita"',
 };
 
-export function AIGenerator({ apiKey, onApply, defaultPilar = 'Gestão', defaultFormato = 'Reels', defaultMarca = 'Diego pessoal' }) {
+export function AIGenerator({ apiKey, posts, onApply, defaultPilar = 'Gestão', defaultFormato = 'Reels', defaultMarca = 'Diego pessoal' }) {
   const [open, setOpen] = useState(false);
   const [pilar, setPilar] = useState(defaultPilar);
   const [formato, setFormato] = useState(defaultFormato);
@@ -29,7 +29,7 @@ export function AIGenerator({ apiKey, onApply, defaultPilar = 'Gestão', default
   const [copied, setCopied] = useState(false);
   const [showCorrection, setShowCorrection] = useState(false);
 
-  const { generate, correct, reset, loading, error, streamText, hasHistory } = useClaudeAPI(apiKey);
+  const { generate, correct, reset, loading, error, streamText, hasHistory } = useClaudeAPI(apiKey, posts);
 
   const currentText = loading ? streamText : result;
 

@@ -19,7 +19,7 @@ function buildCopy(template, values) {
   return result.trim();
 }
 
-export function Templates({ drafts, setDrafts, apiKey }) {
+export function Templates({ drafts, setDrafts, apiKey, posts }) {
   const [activeTemplate, setActiveTemplate] = useState(0);
   const [values, setValues] = useState({});
   const [draftTitle, setDraftTitle] = useState('');
@@ -79,6 +79,7 @@ export function Templates({ drafts, setDrafts, apiKey }) {
       <div style={{ marginBottom: '24px' }}>
         <AIGenerator
           apiKey={apiKey}
+          posts={posts}
           defaultPilar={TEMPLATES_INICIAIS[activeTemplate]?.pilar || 'Gestão'}
           onApply={handleAIApply}
         />

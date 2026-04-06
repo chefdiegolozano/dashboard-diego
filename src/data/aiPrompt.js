@@ -131,3 +131,62 @@ export function buildCorrectionPrompt(correcao) {
 
 Mantenha o tom, a estrutura do pilar e todas as regras. Entregue apenas a copy corrigida, sem comentários.`;
 }
+
+/**
+ * Builds a data-enriched system prompt that includes real Instagram performance stats.
+ * Call this before generating copy when posts data is available.
+ * @param {Array} posts - Full posts array from localStorage
+ */
+export function buildEnrichedSystemPrompt(posts) {
+  if (!posts || posts.length === 0) return SYSTEM_PROMPT;
+
+  const apiPosts = posts.filter(p => p.fonte === 'instagram_api' && p.reach > 0);
+  if (apiPosts.length === 0) return SYSTEM_PROMPT;
+
+  // Top 5 posts by engagement (real data)
+  const sorted = [...apiPosts].sort((a, b) => (b.engajamento || 0) - (a.engajamento || 0));
+  const top5 = sorted.slice(0, 5);
+
+  // Stats by pilar
+  const pilares = ['Gestão', 'Técnica', 'Pessoal', 'Levena', 'ECDL'];
+  const pilarStats = pilares.map(pilar => {
+    const pp = apiPosts.filter(p => p.pilar === pilar);
+    if (pp.length === 0) return null;
+    const avgReach = Math.round(pp.reduce((a, p) => a + (p.reach || 0), 0) / pp.length);
+    const avgEng = (pp.reduce((a, p) => a + (p.engajamento || 0), 0) / pp.length).toFixed(2);
+    const avgSaves = Math.round(pp.reduce((a, p) => a + (p.saves || 0), 0) / pp.length);
+    return { pilar, n: pp.length, avgReach, avgEng, avgSaves };
+  }).filter(Boolean);
+
+  // Best format
+  const reels = apiPosts.filter(p => p.mediaProductType === 'REELS');
+  const feed = apiPosts.filter(p => p.mediaProductType === 'FEED');
+  const avgWatchSec = reels.filter(p => p.avgWatchTimeMs > 0).length > 0
+    ? (reels.filter(p => p.avgWatchTimeMs > 0).reduce((a, p) => a + p.avgWatchTimeMs, 0) / reels.filter(p => p.avgWatchTimeMs > 0).length / 1000).toFixed(1)
+    : null;
+
+  const statsBlock = `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DADOS REAIS DO INSTAGRAM (${apiPosts.length} posts analisados)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+USE ESTES DADOS para calibrar o que funciona e o que não funciona.
+
+PERFORMANCE POR PILAR (média de alcance real):
+${pilarStats.map(s => `• ${s.pilar} (${s.n} posts): reach médio ${s.avgReach.toLocaleString('pt-BR')} | eng ${s.avgEng}% | ${s.avgSaves} saves`).join('\n')}
+
+REELS vs FEED:
+• Reels: ${reels.length} posts${avgWatchSec ? ` | watch time médio: ${avgWatchSec}s` : ''}
+• Feed (Carrossel + Foto): ${feed.length} posts
+
+TOP 5 POSTS (maior engajamento real):
+${top5.map((p, i) => `${i + 1}. [${p.pilar}/${p.formato}] Eng: ${(p.engajamento || 0).toFixed(1)}% | Reach: ${(p.reach || 0).toLocaleString('pt-BR')} | "${p.titulo?.slice(0, 60) || ''}"`).join('\n')}
+
+CONCLUSÕES ESTRATÉGICAS BASEADAS NOS DADOS:
+• O pilar com maior engajamento médio é ${pilarStats.sort((a, b) => parseFloat(b.avgEng) - parseFloat(a.avgEng))[0]?.pilar || 'N/A'}
+• O pilar com maior alcance médio é ${pilarStats.sort((a, b) => b.avgReach - a.avgReach)[0]?.pilar || 'N/A'}
+• O pilar com mais saves (conteúdo valioso) é ${pilarStats.sort((a, b) => b.avgSaves - a.avgSaves)[0]?.pilar || 'N/A'}
+
+Use esses dados para priorizar os pilares de maior performance na copy que vai gerar.`;
+
+  return SYSTEM_PROMPT + '\n' + statsBlock;
+}

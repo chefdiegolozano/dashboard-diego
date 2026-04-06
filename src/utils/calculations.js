@@ -1,16 +1,22 @@
 export function calcEngajamento(post) {
-  const { viewsIG, likes, comments, shares, saves } = post;
-  if (!viewsIG || viewsIG === 0) return 0;
-  const interacoes = (likes || 0) + (comments || 0) + (shares || 0) + (saves || 0);
-  return ((interacoes / viewsIG) * 100);
+  // Prefer pre-computed engajamento from API (stored as percentage, e.g. 4.62)
+  if (post.engajamento && post.engajamento > 0) return parseFloat(post.engajamento);
+  // Fallback: compute from reach or viewsIG
+  const reach = parseFloat(post.reach) || parseFloat(post.viewsIG) || 0;
+  if (reach === 0) return 0;
+  const interacoes = (post.totalInteractions)
+    ? parseFloat(post.totalInteractions)
+    : (parseFloat(post.likes) || 0) + (parseFloat(post.comments) || 0) + (parseFloat(post.shares) || 0) + (parseFloat(post.saves) || 0);
+  return (interacoes / reach) * 100;
 }
 
 export function classificarPost(engajamento, viewsIG) {
   const eng = parseFloat(engajamento);
-  const views = parseFloat(viewsIG);
-  if (eng > 2.5 && views > 180000) return 'EXCELENTE';
-  if (eng >= 2.0 && eng <= 2.5 && views >= 140000 && views <= 180000) return 'BOM';
-  if (eng >= 1.5 && eng < 2.0 && views >= 100000 && views < 140000) return 'REGULAR';
+  const reach = parseFloat(viewsIG);
+  // Thresholds calibrated for @chefdiegolozano (avg reach Reels ~80k, Feed ~360k)
+  if (eng > 5.0 && reach > 80000) return 'EXCELENTE';
+  if (eng >= 3.0 && reach >= 40000) return 'BOM';
+  if (eng >= 1.5 && reach >= 10000) return 'REGULAR';
   return 'FRACO';
 }
 
@@ -68,7 +74,7 @@ export function agruparPorPilar(posts) {
   return pilares.map(pilar => {
     const pPilar = posts.filter(p => p.pilar === pilar);
     const mediaViews = pPilar.length > 0
-      ? pPilar.reduce((a, p) => a + (parseFloat(p.viewsIG) || 0), 0) / pPilar.length
+      ? pPilar.reduce((a, p) => a + (parseFloat(p.reach) || parseFloat(p.viewsIG) || 0), 0) / pPilar.length
       : 0;
     const mediaEng = pPilar.length > 0
       ? pPilar.reduce((a, p) => a + (calcEngajamento(p) || 0), 0) / pPilar.length
@@ -97,7 +103,7 @@ export function getSemanasRecentes(posts, numSemanas = 8) {
 
     const label = `S${numSemanas - i}`;
     const mediaViews = postsSemana.length > 0
-      ? postsSemana.reduce((a, p) => a + (parseFloat(p.viewsIG) || 0), 0) / postsSemana.length
+      ? postsSemana.reduce((a, p) => a + (parseFloat(p.reach) || parseFloat(p.viewsIG) || 0), 0) / postsSemana.length
       : 0;
     const mediaEng = postsSemana.length > 0
       ? postsSemana.reduce((a, p) => a + calcEngajamento(p), 0) / postsSemana.length

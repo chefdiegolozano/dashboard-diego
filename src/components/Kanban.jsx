@@ -68,7 +68,7 @@ function KanbanCardComp({ card, colId, onEdit, onDelete, onDragStart, onDragEnd 
   );
 }
 
-function CardForm({ initial, colId, onSave, onCancel, apiKey }) {
+function CardForm({ initial, colId, onSave, onCancel, apiKey, posts }) {
   const [form, setForm] = useState(initial || emptyCard);
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -83,6 +83,7 @@ function CardForm({ initial, colId, onSave, onCancel, apiKey }) {
       {/* AI Generator integrado no card */}
       <AIGenerator
         apiKey={apiKey}
+        posts={posts}
         defaultPilar={form.pilar}
         defaultMarca={form.marca}
         onApply={(copy) => set('copy', copy)}
@@ -101,7 +102,7 @@ function CardForm({ initial, colId, onSave, onCancel, apiKey }) {
   );
 }
 
-export function Kanban({ kanban, setKanban, apiKey }) {
+export function Kanban({ kanban, setKanban, apiKey, posts }) {
   const [editCard, setEditCard] = useState(null);
   const [editColId, setEditColId] = useState(null);
   const [addColId, setAddColId] = useState(null);
@@ -259,6 +260,7 @@ export function Kanban({ kanban, setKanban, apiKey }) {
           onSave={(form) => handleSaveCard(form, editColId || addColId)}
           onCancel={() => { setEditCard(null); setEditColId(null); setAddColId(null); }}
           apiKey={apiKey}
+          posts={posts}
         />
       </Modal>
     </div>
