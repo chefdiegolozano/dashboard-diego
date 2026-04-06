@@ -1,0 +1,42 @@
+export const MANYCHAT_TRIGGERS_INICIAIS = [
+  {
+    id: 1,
+    keyword: 'LINK',
+    tipo: 'DM',
+    mensagem: 'Aqui está o link atualizado: [URL]. Se precisar de algo mais, me manda aqui.',
+    status: 'Ativo',
+    ultimaAtualizacao: new Date().toISOString().split('T')[0],
+  },
+  {
+    id: 2,
+    keyword: 'CURSO',
+    tipo: 'Comentário',
+    mensagem: 'Esses são os cursos disponíveis na ECDL: [URL catálogo]. Qual te interessa?',
+    status: 'Ativo',
+    ultimaAtualizacao: new Date().toISOString().split('T')[0],
+  },
+  {
+    id: 3,
+    keyword: 'LEVENA',
+    tipo: 'DM',
+    mensagem: 'O Levena fica na [endereço]. Funcionamos de [horário]. Te esperamos!',
+    status: 'Ativo',
+    ultimaAtualizacao: new Date().toISOString().split('T')[0],
+  },
+  {
+    id: 4,
+    keyword: 'RAIOX',
+    tipo: 'Comentário',
+    mensagem: 'Oi! O Raio-X Operacional ECDL é a ferramenta que diagnostica os 7 pontos onde uma confeitaria sangra dinheiro + ficha técnica profissional. R$497 à vista ou 6x de R$92. Acessa aqui: [URL]',
+    status: 'Ativo',
+    ultimaAtualizacao: new Date().toISOString().split('T')[0],
+  },
+  {
+    id: 5,
+    keyword: 'Default reply',
+    tipo: 'DM',
+    mensagem: 'Oi! Obrigado pela mensagem. Vou responder assim que possível. Se for sobre cursos, digita CURSO. Se for sobre o Levena, digita LEVENA.',
+    status: 'Ativo',
+    ultimaAtualizacao: new Date().toISOString().split('T')[0],
+  },
+];

@@ -1,0 +1,61 @@
+export const PAUTAS_INICIAIS = [
+  // GESTÃO (20)
+  { id: 1, numero: 1, pilar: 'Gestão', marca: 'Diego', titulo: 'O dia que descobri que 3 produtos do Levena davam prejuízo', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 2, numero: 2, pilar: 'Gestão', marca: 'Diego', titulo: 'Por que trabalhar mais horas não significa ganhar mais', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 3, numero: 3, pilar: 'Gestão', marca: 'Diego', titulo: 'A conta que nenhum confeiteiro faz (CMV real)', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 4, numero: 4, pilar: 'Gestão', marca: 'Diego', titulo: 'Como reduzi de 34 tarefas pra 4 no Levena', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 5, numero: 5, pilar: 'Gestão', marca: 'Diego', titulo: 'O erro de precificar por sentimento vs ficha técnica', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 6, numero: 6, pilar: 'Gestão', marca: 'Diego', titulo: 'Delegar não é perder controle. É ganhar tempo.', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 7, numero: 7, pilar: 'Gestão', marca: 'Diego', titulo: 'O cardápio inchado: por que 47 sabores te quebram', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 8, numero: 8, pilar: 'Gestão', marca: 'Diego', titulo: 'Quanto você realmente ganha por hora? Faça essa conta.', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 9, numero: 9, pilar: 'Gestão', marca: 'Diego', titulo: 'O dia que o Levena funcionou sem mim pela primeira vez', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 10, numero: 10, pilar: 'Gestão', marca: 'Diego', titulo: 'Por que contratei errado 3 vezes antes de acertar', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 11, numero: 11, pilar: 'Gestão', marca: 'Diego', titulo: 'DRE simplificado: a planilha que salvou meu negócio', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 12, numero: 12, pilar: 'Gestão', marca: 'Diego', titulo: 'O mito do confeiteiro que faz tudo sozinho', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 13, numero: 13, pilar: 'Gestão', marca: 'Diego', titulo: 'Faturar R$30k e não sobrar nada: onde está o erro', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 14, numero: 14, pilar: 'Gestão', marca: 'Diego', titulo: 'Projeção de vendas: como planejar produção sem desperdiçar', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 15, numero: 15, pilar: 'Gestão', marca: 'Diego', titulo: 'O primeiro funcionário: quando contratar e como pagar', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 16, numero: 16, pilar: 'Gestão', marca: 'Diego', titulo: 'Fornecedor mais barato nem sempre é mais barato', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 17, numero: 17, pilar: 'Gestão', marca: 'Diego', titulo: 'Como defini o CMV máximo do Levena', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 18, numero: 18, pilar: 'Gestão', marca: 'Diego', titulo: 'A diferença entre operar e gerir. Maioria só opera.', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 19, numero: 19, pilar: 'Gestão', marca: 'Diego', titulo: 'Sazonalidade: como usar Páscoa, Natal e Dia das Mães sem surtar', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 20, numero: 20, pilar: 'Gestão', marca: 'Diego', titulo: 'O que aprendi perdendo R$500 mil nos primeiros meses', formato: 'Reels', status: 'Disponível', dataUso: null },
+
+  // TÉCNICA (10)
+  { id: 21, numero: 21, pilar: 'Técnica', marca: 'Levena', titulo: 'Por que seu macaron racha (e não é o forno)', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 22, numero: 22, pilar: 'Técnica', marca: 'Levena', titulo: 'Temperagem: o erro que 90% dos confeiteiros cometem', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 23, numero: 23, pilar: 'Técnica', marca: 'Levena', titulo: 'Ganache perfeita: proporção, temperatura e o detalhe que ninguém fala', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 24, numero: 24, pilar: 'Técnica', marca: 'ECDL', titulo: 'Massa folhada: por que a sua não cresce como deveria', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 25, numero: 25, pilar: 'Técnica', marca: 'ECDL', titulo: 'Choux: a física por trás da massa que infla', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 26, numero: 26, pilar: 'Técnica', marca: 'Levena', titulo: 'Como desenvolvi a banana do Levena (processo completo)', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 27, numero: 27, pilar: 'Técnica', marca: 'ECDL', titulo: 'Fermentação natural: não é modismo, é método', formato: 'Carrossel', status: 'Disponível', dataUso: null },
+  { id: 28, numero: 28, pilar: 'Técnica', marca: 'ECDL', titulo: 'Croissant: por que a laminação é tudo', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 29, numero: 29, pilar: 'Técnica', marca: 'Levena', titulo: 'O brigadeiro do Levena: de memória afetiva a sobremesa premium', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 30, numero: 30, pilar: 'Técnica', marca: 'ECDL', titulo: 'Entremet: montagem de camadas com precisão', formato: 'Reels', status: 'Disponível', dataUso: null },
+
+  // PESSOAL (8)
+  { id: 31, numero: 31, pilar: 'Pessoal', marca: 'Diego', titulo: 'O churros da Deise (história da infância + ato de amor)', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 32, numero: 32, pilar: 'Pessoal', marca: 'Diego', titulo: 'Laura no carro novo: o upgrade que significa mais que metal', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 33, numero: 33, pilar: 'Pessoal', marca: 'Diego', titulo: 'O primeiro sábado sem trabalhar', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 34, numero: 34, pilar: 'Pessoal', marca: 'Diego', titulo: 'A torta de morango que me fez virar confeiteiro', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 35, numero: 35, pilar: 'Pessoal', marca: 'Diego', titulo: 'Minha rotina real: do café ao último e-mail', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 36, numero: 36, pilar: 'Pessoal', marca: 'Diego', titulo: 'O que a Deise me ensinou sobre parar de trabalhar', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 37, numero: 37, pilar: 'Pessoal', marca: 'Diego', titulo: 'A tatuagem do Pastry Love: por que está no meu pescoço', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 38, numero: 38, pilar: 'Pessoal', marca: 'Diego', titulo: 'O jantar que eu cozinhei pra minha família (mignon + molho roti)', formato: 'Reels', status: 'Disponível', dataUso: null },
+
+  // LEVENA (7)
+  { id: 39, numero: 39, pilar: 'Levena', marca: 'Levena', titulo: 'Contos do Levena: A Escadaria', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 40, numero: 40, pilar: 'Levena', marca: 'Levena', titulo: 'Contos do Levena: O Piso (mosaico do cacau)', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 41, numero: 41, pilar: 'Levena', marca: 'Levena', titulo: 'Contos do Levena: As Luminárias de Grumixama', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 42, numero: 42, pilar: 'Levena', marca: 'Levena', titulo: 'Contos do Levena: As Luminárias de Cacau', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 43, numero: 43, pilar: 'Levena', marca: 'Levena', titulo: 'Contos do Levena: A Origem do Logo', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 44, numero: 44, pilar: 'Levena', marca: 'Levena', titulo: 'Bombons de coquetéis: quando duas paixões se encontram', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 45, numero: 45, pilar: 'Levena', marca: 'Levena', titulo: 'Bananas de Páscoa: como nasceu a ideia', formato: 'Reels', status: 'Disponível', dataUso: null },
+
+  // ECDL (5)
+  { id: 46, numero: 46, pilar: 'ECDL', marca: 'ECDL', titulo: 'A nova escola: 14 anos de sonho virando realidade', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 47, numero: 47, pilar: 'ECDL', marca: 'ECDL', titulo: 'Master Confeiteiro: o que muda em 10 dias de imersão', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 48, numero: 48, pilar: 'ECDL', marca: 'ECDL', titulo: 'Doces pra Cafeteria: por que o básico bem feito muda tudo', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 49, numero: 49, pilar: 'ECDL', marca: 'ECDL', titulo: 'Confeitaria Moderna 2.0: sobremesas de nível avançado em 3 dias', formato: 'Reels', status: 'Disponível', dataUso: null },
+  { id: 50, numero: 50, pilar: 'ECDL', marca: 'ECDL', titulo: 'Introdução ao Chocolate: onde tudo começa', formato: 'Reels', status: 'Disponível', dataUso: null },
+];

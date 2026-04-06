@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --dark: #1A1209;
+  --gold: #B8860B;
+  --cream: #F5EDE0;
+  --white: #FFFFFF;
+  --light-gold: #FFF8E7;
+  --gray: #666666;
+  --text: #333333;
+  --green: #2E7D32;
+  --yellow: #F57F17;
+  --red: #C62828;
+  --blue: #1565C0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--cream);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+}
+
+.font-georgia {
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+/* Focus */
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(100px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.animate-fade-in { animation: fadeIn 0.25s ease-out; }
+.animate-toast { animation: toastIn 0.3s ease-out; }
+
+/* Drag and drop */
+.dragging { opacity: 0.5; cursor: grabbing !important; }
+.drag-over { border: 2px dashed var(--gold) !important; background-color: var(--light-gold) !important; }
