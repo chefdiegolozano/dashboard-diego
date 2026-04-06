@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import { Download, Upload, Trash2, Info, Sparkles, Eye, EyeOff } from 'lucide-react';
+import { Download, Upload, Trash2, Info, Sparkles, Eye, EyeOff, RefreshCw } from 'lucide-react';
 import { Card, SectionHeader, Btn } from './ui/Card';
 import { ConfirmModal } from './ui/Modal';
 import { showToast } from './ui/Toast';
 
-export function Settings({ posts, pautas, calendarData, storiesData, drafts, checklists, kanban, triggers, onImport, onReset, apiKey, setApiKey }) {
+const SEC_API = import.meta.env.VITE_SEC_API_URL || 'http://localhost:3457';
+
+export function Settings({ posts, pautas, calendarData, storiesData, drafts, checklists, kanban, triggers, onImport, onReset, apiKey, setApiKey, setPosts }) {
   const [showReset, setShowReset] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncDays, setSyncDays] = useState(90);
   const [showReset2, setShowReset2] = useState(false);
   const [keyInput, setKeyInput] = useState(apiKey || '');
   const [showKey, setShowKey] = useState(false);
@@ -66,6 +70,28 @@ export function Settings({ posts, pautas, calendarData, storiesData, drafts, che
     showToast(keyInput.trim() ? 'Chave de API salva' : 'Chave removida', keyInput.trim() ? 'success' : 'info');
   };
 
+  const syncInstagram = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch(`${SEC_API}/sec/instagram/dashboard?days=${syncDays}&limit=500`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || 'Erro desconhecido');
+
+      // Merge: keep manual posts, add/update posts from API by id
+      const apiIds = new Set(data.posts.map(p => String(p.id)));
+      const manualPosts = posts.filter(p => !apiIds.has(String(p.id)) && p.fonte !== 'instagram_api');
+      const merged = [...data.posts, ...manualPosts];
+      setPosts(merged);
+
+      showToast(`${data.posts.length} posts sincronizados (${syncDays} dias) · ${data.profile?.followers?.toLocaleString('pt-BR') || '—'} seguidores`);
+    } catch (err) {
+      showToast(`Erro ao sincronizar: ${err.message}`, 'error');
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div style={{ padding: '32px' }} className="animate-fade-in">
       <SectionHeader title="Configurações" subtitle="Gerenciar dados, exportar e importar" />
@@ -104,6 +130,39 @@ export function Settings({ posts, pautas, calendarData, storiesData, drafts, che
             Chave configurada — geração de copy ativa
           </p>
         )}
+      </Card>
+
+      {/* Instagram Sync Card */}
+      <Card style={{ padding: '24px', marginBottom: '20px', border: '1px solid #E1BEE7', background: '#FAF5FF' }}>
+        <h3 style={{ fontFamily: 'Georgia,serif', color: '#6A1B9A', margin: '0 0 8px', fontSize: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <RefreshCw size={18} /> Sincronizar com Instagram
+        </h3>
+        <p style={{ fontSize: '13px', color: '#666', lineHeight: 1.6, margin: '0 0 16px' }}>
+          Importa automaticamente todos os posts coletados pela secretaria — <strong>{posts.filter(p => p.fonte === 'instagram_api').length} posts do Instagram</strong> no dashboard atualmente.
+          Roda diariamente via cron, mas você pode forçar uma atualização manual aqui.
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ fontSize: '12px', fontWeight: 600, color: '#555' }}>Últimos</label>
+            <select value={syncDays} onChange={e => setSyncDays(Number(e.target.value))}
+              style={{ padding: '6px 10px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '13px', cursor: 'pointer' }}>
+              <option value={30}>30 dias</option>
+              <option value={90}>90 dias</option>
+              <option value={180}>180 dias</option>
+              <option value={365}>1 ano</option>
+              <option value={9999}>Todos (desde 2021)</option>
+            </select>
+          </div>
+          <Btn onClick={syncInstagram} disabled={syncing} style={{ background: '#6A1B9A', color: '#fff', border: 'none' }}>
+            {syncing
+              ? <><RefreshCw size={14} style={{ animation: 'spin 1s linear infinite' }} /> Sincronizando...</>
+              : <><RefreshCw size={14} /> Sincronizar agora</>
+            }
+          </Btn>
+        </div>
+        <p style={{ fontSize: '11px', color: '#999', margin: '10px 0 0' }}>
+          API: {SEC_API} · Coleta diária automática às 08h (briefing) e 09h (suggest)
+        </p>
       </Card>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>

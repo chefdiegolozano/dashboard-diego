@@ -81,6 +81,7 @@ export default function App() {
       kanban={kanban} triggers={triggers}
       onImport={handleImport} onReset={handleReset}
       apiKey={apiKey} setApiKey={setApiKey}
+      setPosts={setPosts}
     />,
   };
 
